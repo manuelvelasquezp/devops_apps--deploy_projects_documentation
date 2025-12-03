@@ -1,0 +1,209 @@
+[build-system]
+requires = ["setuptools>=80.9.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+#py-modules = ["main"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project]
+name = "pre-consumer-mailer"
+version = "1.0.0"
+description = "pre consumer mailer"
+license = { text = "MIT" }
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.1.15",
+    "pytest>=7.4.0",
+    "pytest-env>=1.1.5",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.1.0",
+    "pytest-mock==3.12.0"
+]
+
+# ============================================
+# RUFF CONFIGURATION
+# ============================================
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".env",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "env",
+    "venv",
+    "logs",
+    "data",
+]
+
+[tool.ruff.lint]
+select = [
+    # Pyflakes - Detects basic errors (undefined variables, unused imports)
+    "F",
+    # Pycodestyle errors - PEP 8 formatting and style errors
+    "E",
+    # Pycodestyle warnings - PEP 8 formatting and style warnings
+    "W",
+    # isort - Automatically sorts and organizes imports
+    "I",
+    # flake8-bugbear - Detects common bugs and anti-patterns
+    "B",
+    # flake8-comprehensions - Optimizes comprehensions and generators
+    "C4",
+    # pyupgrade - Modernizes syntax for recent Python versions
+    "UP",
+    # flake8-simplify - Suggests code simplifications
+    "SIM",
+    # flake8-use-pathlib - Prefers pathlib over os.path
+    "PTH",
+    # flake8-return - Optimizes return statements
+    "RET",
+    # flake8-logging-format - Validates correct logging format
+    "G",
+    # flake8-pie - Detects unnecessary and improvable patterns
+    "PIE",
+    # flake8-async - Detects issues in asynchronous code
+    "ASYNC",
+    # pylint - Wide range of code quality checks
+    "PL",
+]
+
+ignore = [
+    # Line too long (handled by formatter)
+    "E501",
+    # `zip()` without an explicit `strict=` parameter (Python 3.9 compatibility)
+    "B905",
+    # Too many arguments in function definition
+    "PLR0913",
+    # Too many return statements
+    "PLR0911",
+    # Too many branches
+    "PLR0912",
+    # Too many statements
+    "PLR0915",
+    # Magic value used in comparison
+    "PLR2004",
+]
+
+# Allow fix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+unfixable = []
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.lint.per-file-ignores]
+# Tests can use magic values, assertions, and fixtures
+"tests/**/*.py" = [
+    "PLR2004", # Magic value used in comparison
+    "S101", # Use of assert detected
+    "ARG", # Unused function args -> fixtures nevertheless are functionally relevant
+    "FBT", # Don't care about booleans as positional arguments in tests
+    "PLR0913", # Too many arguments to function call
+    "PLR0915", # Too many statements
+    "S311", # Standard pseudo-random generators are not suitable for cryptographic purposes
+]
+
+# Allow print statements in CLI scripts
+"src/handlers/main.py" = ["T20"]
+"main.py" = ["T20"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["src"]
+force-sort-within-sections = true
+split-on-trailing-comma = true
+
+[tool.ruff.lint.flake8-comprehensions]
+allow-dict-calls-with-keyword-arguments = true
+
+[tool.ruff.lint.pylint]
+max-args = 8
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+# ============================================
+# PYTEST CONFIGURATION
+# ============================================
+[tool.pytest.ini_options]
+pythonpath = ["src", "tests"]
+testpaths = ["tests"]
+log_cli = true
+log_cli_level = "INFO"
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+asyncio_mode = "auto"
+#asyncio_default_fixture_loop_scope = "function"
+addopts = [
+    "-ras",
+    "--strict-markers",
+    "--strict-config",
+    "--cov=src",
+    "--cov-report=term-missing:skip-covered",
+    "--cov-report=html:htmlcov",
+    "--cov-report=xml",
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+]
+env = [
+    "ENVIRONMENT=local",
+]
+
+# ============================================
+# COVERAGE CONFIGURATION
+# ============================================
+[tool.coverage.run]
+omit = [
+    "*/*setup.py",
+    "*/tests/*",
+    "*/*__init__.py",
+    "*/build/*",
+    "*/venv/*",
+    "*/.venv/*"
+]
+
+[tool.coverage.report]
+precision = 2
+show_missing = true
+skip_covered = false
+fail_under = 20
+
+[tool.coverage.html]
+directory = "htmlcov"
+
+[tool.bandit]
+exclude_dirs = ["tests", "test", ".venv", "venv", "node_modules",".git"]
+skips = ["B101", "B106"]
