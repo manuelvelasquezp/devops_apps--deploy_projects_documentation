@@ -212,24 +212,60 @@ El archivo de política de Safety permite:
 
 ### 3.2 Ejecutar Pruebas
 
-Para ejecutar Safety localmente en tu proyecto:
+Safety 3.x requiere autenticación. Existen dos métodos de autenticación:
+
+#### Método 1: Login Interactivo (Recomendado para desarrollo local)
 
 ```bash
 # Instalar Safety (si no está instalado)
 pip install safety
 
-# Escanear dependencias usando requirements.txt
-safety check -r requirements.txt
+# Registrarse (si no tienes cuenta)
+safety auth register
 
-# Escanear con el archivo de política
-safety check -r requirements.txt --policy-file .safety-policy.yml
+# Hacer login (abre el navegador para autenticación)
+safety auth login
+
+# Verificar estado de autenticación
+safety auth
+```
+
+Una vez autenticado, Safety recordará tus credenciales localmente.
+
+#### Método 2: API Key
+
+Para obtener tu API Key:
+1. Crea una cuenta en [Safety](https://platform.safetycli.com/)
+2. Ve a la sección **Teams and API Keys** en tu dashboard
+3. Copia tu API key
+
+```bash
+# Configurar API key como variable de entorno
+export SAFETY_API_KEY=your-api-key
+
+# O usar el flag --key directamente
+safety --key your-api-key scan
+```
+
+#### Ejecutar escaneos
+
+Safety 3.x detecta automáticamente:
+- requirements.txt
+- pyproject.toml
+- Python virtual environments
+
+```bash
+# Escanear el directorio actual (auto-detecta todas las dependencias Python)
+safety scan
 
 # Generar reporte en formato JSON
-safety check -r requirements.txt --json --output safety-report.json
+safety scan --output json > safety-report.json
 
-# Mostrar solo vulnerabilidades críticas
-safety check -r requirements.txt --severity critical
+# Ver resumen del escaneo
+safety scan
 ```
+
+Safety 3.x utiliza el comando `scan` que automáticamente detecta todos los archivos de dependencias en tu proyecto sin necesidad de especificarlos manualmente.
 
 ### 3.3 Check de Resultados
 
