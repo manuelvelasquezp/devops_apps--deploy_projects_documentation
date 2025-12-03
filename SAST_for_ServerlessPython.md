@@ -106,6 +106,10 @@ El archivo `gl-code-quality-report.json` sigue el formato estándar de GitLab Co
 }
 ```
 
+También puedes ver un resumen de los errores detectados directamente en los comentarios del Merge Request:
+
+![Comentarios de errores en MR](./python_lint_error_comment.png)
+
 ---
 
 ## 2. Security Check - Bandit
@@ -122,6 +126,64 @@ El archivo `gl-code-quality-report.json` sigue el formato estándar de GitLab Co
 - Configuraciones inseguras de SSL/TLS
 - Path traversal y otros problemas de seguridad comunes
 
+### 2.1 Instalación
+
+La configuración de Bandit se incluye en el archivo `pyproject.toml` en la raíz del proyecto.
+
+Puedes utilizar como referencia el [pyproject.toml](./pyproject.toml) de este repositorio. La configuración de Bandit se encuentra en la sección `[tool.bandit]`:
+
+```toml
+[tool.bandit]
+exclude_dirs = ["tests", "test", ".venv", "venv", "node_modules", ".git"]
+skips = ["B101", "B106"]
+```
+
+Esta configuración incluye:
+- **exclude_dirs**: Directorios que Bandit debe ignorar durante el análisis
+- **skips**: Códigos de reglas específicas que se omiten (ej. B101: assert_used, B106: hardcoded_password_funcarg)
+
+### 2.2 Ejecutar Pruebas
+
+Para ejecutar Bandit localmente en tu proyecto:
+
+```bash
+# Instalar Bandit (si no está instalado)
+pip install bandit
+
+# Ejecutar el análisis en todo el proyecto
+bandit -r .
+
+# Ejecutar con configuración desde pyproject.toml
+bandit -r . --configfile pyproject.toml
+
+# Generar reporte en formato JSON
+bandit -r . -f json -o bandit-report.json
+
+# Verificar solo archivos específicos
+bandit path/to/file.py
+```
+
+### 2.3 Check de Resultados
+
+Si recibes una notificación como esta en Slack:
+
+![Error de Bandit](./python_bandit_error.png)
+
+Es porque falló el test de seguridad de Bandit. **Importante**: El pipeline solo falla si Bandit encuentra issues de severidad **HIGH**.
+
+Para identificar los problemas detectados:
+
+1. **Verificar los artefactos del pipeline**: Revisa los artefactos generados durante la ejecución del pipeline
+2. **Ubicar el reporte**: Busca el archivo `bandit-report.json` en los artefactos
+3. **Analizar vulnerabilidades**: Este archivo JSON contiene el detalle de todas las vulnerabilidades de seguridad encontradas
+
+El archivo `bandit-report.json` contiene:
+- Descripción de cada vulnerabilidad
+- Nivel de severidad (LOW, MEDIUM, HIGH)
+- Nivel de confianza del hallazgo
+- Ubicación exacta en el código (archivo y línea)
+- Información adicional y recomendaciones
+
 ---
 
 ## 3. Dependency Security - Safety
@@ -135,5 +197,58 @@ El archivo `gl-code-quality-report.json` sigue el formato estándar de GitLab Co
 - Versiones obsoletas con parches de seguridad disponibles
 - Dependencias con niveles críticos de severidad
 - Alertas de seguridad de la comunidad Python
+
+### 3.1 Instalación
+
+Para configurar Safety en tu proyecto, debes agregar el archivo `.safety-policy.yml` en la raíz del proyecto.
+
+Puedes utilizar como referencia el [.safety-policy.yml](./.safety-policy.yml) de este repositorio, que ya cuenta con las configuraciones necesarias.
+
+El archivo de política de Safety permite:
+- Definir el nivel de severidad mínimo para fallar el build
+- Ignorar vulnerabilidades específicas (con justificación)
+- Configurar el comportamiento del escaneo
+- Establecer excepciones temporales
+
+### 3.2 Ejecutar Pruebas
+
+Para ejecutar Safety localmente en tu proyecto:
+
+```bash
+# Instalar Safety (si no está instalado)
+pip install safety
+
+# Escanear dependencias usando requirements.txt
+safety check -r requirements.txt
+
+# Escanear con el archivo de política
+safety check -r requirements.txt --policy-file .safety-policy.yml
+
+# Generar reporte en formato JSON
+safety check -r requirements.txt --json --output safety-report.json
+
+# Mostrar solo vulnerabilidades críticas
+safety check -r requirements.txt --severity critical
+```
+
+### 3.3 Check de Resultados
+
+**Importante**: El pipeline solo falla si Safety encuentra vulnerabilidades de severidad **CRITICAL** o **HIGH**.
+
+Si el test falla, recibirás una notificación indicando que se encontraron vulnerabilidades críticas o de alta severidad en las dependencias del proyecto.
+
+Para identificar las vulnerabilidades detectadas:
+
+1. **Verificar los artefactos del pipeline**: Revisa los artefactos generados durante la ejecución del pipeline
+2. **Ubicar el reporte**: Busca el archivo `safety-report.json` en los artefactos
+3. **Revisar los comentarios del MR**: Safety también agrega comentarios en el Merge Request con un resumen de las vulnerabilidades encontradas
+4. **Actualizar dependencias**: Actualiza las versiones de los paquetes afectados antes de realizar el merge
+
+El archivo `safety-report.json` contiene:
+- Paquete vulnerable y versión instalada
+- Vulnerabilidad CVE detectada
+- Nivel de severidad (CRITICAL, HIGH, MEDIUM, LOW)
+- Versión segura recomendada
+- Descripción de la vulnerabilidad
 
 ---
