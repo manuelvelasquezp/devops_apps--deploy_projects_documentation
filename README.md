@@ -15,4 +15,9 @@ Validaciones SAST (Static Application Security Testing)
   - Checkstyle para validación de estándares de código
   - Integración con GitLab MR y bloqueo automático
 
+- **[SAST para Aplicaciones TypeScript](./SAST_for_Typescript.md)**
+  - Análisis estático de seguridad para proyectos TypeScript
+  - ESLint 9 para validación de código y seguridad
+  - Integración con GitLab MR y bloqueo automático
+
 
