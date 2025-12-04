@@ -1,9 +1,9 @@
 # Documentación
 
-Bienvenido a la documentación de SAST.
+Validaciones SAST (Static Application Security Testing)
 
 
-### Seguridad y Calidad (SAST)
+### Implementaciones
 
 - **[SAST para Aplicaciones Python](./SAST_for_ServerlessPython.md)**
   - Análisis estático de seguridad para proyectos Python Serverless
