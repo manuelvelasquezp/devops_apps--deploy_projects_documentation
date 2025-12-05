@@ -5,6 +5,7 @@ Este documento detalla el análisis estático de seguridad (SAST - Static Applic
 ## Tabla de Contenidos
 
 - [1. ESLint Check - ESLint](#1-eslint-check---eslint)
+- [2. NPM Audit Check - Security](#2-npm-audit-check---security)
 
 ---
 
@@ -241,5 +242,147 @@ Agrega en `.vscode/settings.json`:
   }
 }
 ```
+
+---
+
+## 2. NPM Audit Check - Security
+
+**Descripción**: NPM Audit es una herramienta de seguridad integrada en npm que analiza las dependencias del proyecto para identificar vulnerabilidades de seguridad conocidas. Compara las versiones de los paquetes instalados con la base de datos de vulnerabilidades de npm.
+
+**Propósito**: Identificar y reportar vulnerabilidades de seguridad en las dependencias de Node.js/TypeScript, ayudando a mantener las aplicaciones seguras y protegidas contra amenazas conocidas.
+
+**Qué detecta**:
+- Vulnerabilidades de seguridad en dependencias directas
+- Vulnerabilidades en dependencias transitivas (sub-dependencias)
+- Severidad de las vulnerabilidades (Critical, High, Moderate, Low, Info)
+- Paquetes desactualizados con parches de seguridad disponibles
+- CVEs (Common Vulnerabilities and Exposures) conocidos
+- Recomendaciones de actualización de paquetes
+- Disponibilidad de correcciones automáticas
+
+### 2.1 Ejecutar Pruebas
+
+NPM Audit está integrado nativamente en npm y no requiere instalación adicional.
+
+**Comandos básicos:**
+
+```bash
+# Ejecutar auditoría de seguridad
+npm audit
+
+# Ejecutar auditoría con salida en formato JSON
+npm audit --json
+
+# Ver solo vulnerabilidades de severidad alta o crítica
+npm audit --audit-level=high
+```
+
+**Corregir vulnerabilidades automáticamente:**
+
+```bash
+# Intentar corrección automática (versiones compatibles)
+npm audit fix
+
+# Corrección forzada (puede actualizar a versiones breaking)
+npm audit fix --force
+
+# Ver qué cambios se aplicarían sin ejecutarlos
+npm audit fix --dry-run
+```
+
+
+### 2.2 Check de Resultados
+
+Si en las notificaciones obtienes un error indicando que falló el análisis de NPM Audit, significa que se encontraron vulnerabilidades críticas o altas.
+
+**Estándares de Seguridad:**
+- **Vulnerabilidades Critical**: Deben ser 0 
+- **Vulnerabilidades High**: Deben ser 0 
+- **Vulnerabilidades Moderate**: Permitidas (con advertencia) 
+- **Vulnerabilidades Low**: Permitidas (con advertencia) 
+
+
+Para identificar y solucionar las vulnerabilidades:
+
+1. **Verificar el detalle en el Merge Request**: El pipeline agrega automáticamente un comentario en el MR con:
+   - Resumen de vulnerabilidades por severidad
+   - Tabla con las primeras 10 vulnerabilidades encontradas
+   - Paquete afectado
+   - Severidad y descripción
+   - Indicación si hay corrección disponible
+
+2. **Descargar el reporte desde los artefactos**: Revisa los artefactos generados durante la ejecución del pipeline y descarga el archivo `npm-audit-report.json`
+
+3. **Analizar el reporte JSON**: El reporte contiene información detallada de cada vulnerabilidad:
+
+**Ejemplo de estructura del reporte:**
+
+```json
+{
+  "auditReportVersion": 2,
+  "vulnerabilities": {
+    "axios": {
+      "name": "axios",
+      "severity": "high",
+      "via": [
+        {
+          "source": 1096354,
+          "name": "axios",
+          "dependency": "axios",
+          "title": "Axios Cross-Site Request Forgery Vulnerability",
+          "url": "https://github.com/advisories/GHSA-wf5p-g6vw-rhxx",
+          "severity": "high",
+          "cwe": ["CWE-352"],
+          "cvss": {
+            "score": 8.1,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H"
+          },
+          "range": ">=0.8.1 <0.21.3"
+        }
+      ],
+      "effects": [],
+      "range": ">=0.8.1 <0.21.3",
+      "nodes": ["node_modules/axios"],
+      "fixAvailable": true
+    }
+  },
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 2,
+      "moderate": 5,
+      "high": 3,
+      "critical": 1,
+      "total": 11
+    },
+    "dependencies": {
+      "prod": 125,
+      "dev": 543,
+      "optional": 0,
+      "peer": 0,
+      "peerOptional": 0,
+      "total": 667
+    }
+  }
+}
+```
+
+**Interpretación de resultados:**
+
+- **Critical (Crítico)**: Vulnerabilidad extremadamente grave que debe corregirse inmediatamente. El pipeline falla.
+- **High (Alto)**: Vulnerabilidad grave que debe corregirse con alta prioridad. El pipeline falla.
+- **Moderate (Moderado)**: Vulnerabilidad importante que debe revisarse y corregirse cuando sea posible. El pipeline continúa.
+- **Low (Bajo)**: Vulnerabilidad menor, se recomienda corrección. El pipeline continúa.
+
+
+**Recomendaciones:**
+
+1. Ejecuta `npm audit` regularmente antes de hacer commits
+2. Mantén las dependencias actualizadas con `npm update`
+3. Revisa las vulnerabilidades en el reporte JSON para entender el impacto
+4. Usa `npm audit fix` primero antes de intentar `--force`
+5. Documenta las vulnerabilidades que no puedan corregirse inmediatamente
+6. Considera usar herramientas adicionales como Snyk o Dependabot
+7. Revisa el changelog de paquetes antes de actualizar versiones major
 
 ---

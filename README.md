@@ -17,7 +17,7 @@ Validaciones SAST (Static Application Security Testing)
 
 - **[SAST para Aplicaciones TypeScript](./SAST_for_Typescript.md)**
   - Análisis estático de seguridad para proyectos TypeScript
-  - ESLint 9 para validación de código y seguridad
+  - 2 herramientas: ESLint 9 (Code Quality), NPM Audit (Dependencies Security)
   - Integración con GitLab MR y bloqueo automático
 
 
