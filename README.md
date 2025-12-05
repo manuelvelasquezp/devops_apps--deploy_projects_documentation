@@ -11,9 +11,11 @@ Esta tabla resume las herramientas de análisis estático implementadas, los est
 | **Ruff** | Python | Lint / Code Quality | PEP 8, Python Best Practices | Cualquier warning detectado | ✅ **Alineado** - PEP 8 es el estándar de Python que promueve legibilidad, mantenibilidad y consistencia |
 | **Bandit** | Python | Security Analysis | OWASP, CWE, Python Security | Severidad HIGH o superior | ✅ **Alineado** - Detecta patrones inseguros y vulnerabilidades que comprometen la calidad y seguridad del código |
 | **Safety** | Python | Dependency Security | CVE Database, PyPI Advisory | Severidad CRITICAL o HIGH | ✅ **Alineado** - Mantener dependencias actualizadas y sin vulnerabilidades es parte de código sostenible |
-| **Checkstyle** | Java | Code Style | Google Java Style Guide / Sun Conventions | Errores > 0 o Total > 10 | ✅ **Alineado** - Enforza convenciones de nombres, formato y diseño que mejoran legibilidad |
+| **Checkstyle** | Java | Code Style | Google Java Style Guide / Sun Conventions | Errores > 0 o Total > 10 | ✅ **Alineado** - Valida convenciones de nombres, formato y diseño que mejoran legibilidad |
 | **ESLint 9** | TypeScript/JS | Code Quality & Security | ESLint Recommended, TypeScript-ESLint, Security Plugin | Errores > 0 o Total > 10 | ✅ **Alineado** - Detecta errores, malas prácticas y vulnerabilidades de seguridad en tiempo de desarrollo |
 | **NPM Audit** | TypeScript/JS | Dependency Security | npm Advisory Database, CVE | Severidad CRITICAL o HIGH | ✅ **Alineado** - Gestión responsable de dependencias para reducir deuda técnica y riesgos de seguridad |
+| **SonarQube** | Multi-lenguaje | Code Quality & Security | OWASP Top 10, CWE, SANS Top 25 | Quality Gates configurados | ✅ **Alineado** - Análisis integral de calidad, seguridad, cobertura y duplicación de código según mejores prácticas |
+| **OWASP Dependency Check** | Multi-lenguaje | Dependency Security | CVE Database, NVD | Severidad CRITICAL o HIGH | ✅ **Alineado** - Identifica vulnerabilidades conocidas en dependencias de terceros para todos los lenguajes |
 
 ### Análisis de Alineación con Clean Code
 
@@ -22,23 +24,23 @@ Todas las herramientas implementadas están **completamente alineadas** con los 
 #### ✅ Principios Cumplidos:
 
 1. **Legibilidad y Expresividad**
-   - Ruff (PEP 8), Checkstyle y ESLint enforzan nombres descriptivos, formato consistente y estructura clara
+   - Ruff (PEP 8), Checkstyle, ESLint y SonarQube validan nombres descriptivos, formato consistente y estructura clara
    - Facilita que el código sea leído como prosa
 
 2. **Responsabilidad Única y Diseño Simple**
-   - Checkstyle y ESLint detectan complejidad ciclomática excesiva
+   - Checkstyle, ESLint y SonarQube detectan complejidad ciclomática excesiva
    - Promueven funciones pequeñas y clases cohesivas
 
 3. **Sin Duplicación (DRY)**
-   - ESLint y Ruff detectan código duplicado y patrones repetitivos
+   - ESLint, Ruff y SonarQube detectan código duplicado y patrones repetitivos
    - Fomentan la reutilización y abstracción apropiada
 
 4. **Seguridad y Robustez**
-   - Bandit, Safety y NPM Audit previenen vulnerabilidades
+   - Bandit, Safety, NPM Audit, OWASP Dependency Check y SonarQube previenen vulnerabilidades
    - Clean Code incluye código seguro y mantenible
 
 5. **Mantenibilidad**
-   - Todos los linters enforzan estándares que facilitan el mantenimiento a largo plazo
+   - Todos los linters validan estándares que facilitan el mantenimiento a largo plazo
    - Reducen la deuda técnica
 
 #### 📊 Criterios de Severidad
