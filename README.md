@@ -8,7 +8,7 @@ Esta tabla resume las herramientas de análisis estático implementadas, los est
 
 | Herramienta | Lenguaje | Categoría | Estándar Utilizado | Criterios de Fallo | Clean Code |
 |-------------|----------|-----------|-------------------|-------------------|------------|
-| **Ruff** | Python | Lint / Code Quality | PEP 8, Python Best Practices | Cualquier violación detectada | ✅ **Alineado** - PEP 8 es el estándar de Python que promueve legibilidad, mantenibilidad y consistencia |
+| **Ruff** | Python | Lint / Code Quality | PEP 8, Python Best Practices | Cualquier warning detectado | ✅ **Alineado** - PEP 8 es el estándar de Python que promueve legibilidad, mantenibilidad y consistencia |
 | **Bandit** | Python | Security Analysis | OWASP, CWE, Python Security | Severidad HIGH o superior | ✅ **Alineado** - Detecta patrones inseguros y vulnerabilidades que comprometen la calidad y seguridad del código |
 | **Safety** | Python | Dependency Security | CVE Database, PyPI Advisory | Severidad CRITICAL o HIGH | ✅ **Alineado** - Mantener dependencias actualizadas y sin vulnerabilidades es parte de código sostenible |
 | **Checkstyle** | Java | Code Style | Google Java Style Guide / Sun Conventions | Errores > 0 o Total > 10 | ✅ **Alineado** - Enforza convenciones de nombres, formato y diseño que mejoran legibilidad |
@@ -45,7 +45,7 @@ Todas las herramientas implementadas están **completamente alineadas** con los 
 
 Los criterios de fallo están configurados de forma **balanceada**:
 - **Strict para seguridad**: Critical y High bloquean el merge (principio de seguridad primero)
-- **Permisivo para calidad**: Hasta 10 violaciones menores permitidas (balance entre calidad y pragmatismo)
+- **Permisivo para calidad**: Hasta 10 warnings menores permitidos (balance entre calidad y pragmatismo)
 - **Zero tolerance para errores**: Los errores de nivel "error" deben ser 0 (código que funciona correctamente)
 
 Esta configuración permite:
