@@ -15,7 +15,7 @@ Esta tabla resume las herramientas de análisis estático implementadas, los est
 | **ESLint 9** | TypeScript/JS | Code Quality & Security | ESLint Recommended, TypeScript-ESLint, Security Plugin | Errores > 0 o Total > 10 | ✅ **Alineado** - Detecta errores, malas prácticas y vulnerabilidades de seguridad en tiempo de desarrollo |
 | **NPM Audit** | TypeScript/JS | Dependency Security | npm Advisory Database, CVE | Severidad CRITICAL o HIGH | ✅ **Alineado** - Gestión responsable de dependencias para reducir deuda técnica y riesgos de seguridad |
 | **SonarQube** | Multi-lenguaje | Code Quality & Security | OWASP Top 10, CWE, SANS Top 25 | Quality Gates configurados | ✅ **Alineado** - Análisis integral de calidad, seguridad, cobertura y duplicación de código según mejores prácticas |
-| **OWASP Dependency Check** | Multi-lenguaje | Dependency Security | CVE Database, NVD | Severidad CRITICAL o HIGH | ✅ **Alineado** - Identifica vulnerabilidades conocidas en dependencias de terceros para todos los lenguajes |
+| **OWASP Dependency Check** | Multi-lenguaje | Dependency Security | CVE Database, NVD | Critical > 0, High > 0, o Medium > 3 | ✅ **Alineado** - Identifica vulnerabilidades conocidas en dependencias de terceros para todos los lenguajes |
 
 ### Análisis de Alineación con Clean Code
 
