@@ -21,3 +21,4 @@ Validaciones SAST (Static Application Security Testing)
   - Integración con GitLab MR y bloqueo automático
 
 
+ 
